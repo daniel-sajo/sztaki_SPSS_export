@@ -65,7 +65,7 @@ public class DBMain {
         
         // SPSS parameter name must not include whitespace characters
         name = name.replace(' ', '_');
-                
+        
         // SPSS parameter name has to begin with a letter or @
         name = "p"+name;
         
