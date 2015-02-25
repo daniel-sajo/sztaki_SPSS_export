@@ -19,13 +19,15 @@ import spssexport.DBMain;
 public class Main {
     @GET
     @Path("/{param}")
+    //@Produces(MediaType.)
     public Response getMsg(@PathParam("param") String message) {
         String output = "Hello " + message + "!";
         
         spssexport.DBMain csvExport = new DBMain();
         String csv = csvExport.createCSV();
         
-        return Response.status(200).entity(csv).build();
+        //return Response.status(200).entity(csv).build();
+        return Response.ok(csv, "text/csv").build();
     }
     
     

@@ -1,17 +1,10 @@
 package spssexport;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class DBMain {
-
-    public static void main(String args[]) {
-        new DBMain();
-    }
 
     TreeSet<String> parameterList;
     List<Queries> queryResult;
@@ -19,14 +12,10 @@ public class DBMain {
 
     public DBMain() {
 
-        //get jdbcTemplatePersonDAO
         QueriesDAO queriesDAO = new QueriesDAO(MyBatisConnectionFactory.getSqlSessionFactory());
 
-        
-        //select all
         queryResult = queriesDAO.selectAll();
 
-        // creating parameter list
         createParameterList();
 
         createPatientList();
@@ -58,21 +47,29 @@ public class DBMain {
             parameterList.add(paramName);
         }
 
-//        for(String s: parameterList){
-//            System.out.println(s);
-//        }
     }
 
     /**
      * Creates parameterName from original parameter name and week of the
      * examination
+     * Methods takes SPSS's naming conventions into consideration:
+     * http://webservices.itcs.umich.edu/mediawiki/qualtrics/index.php/SPSS_notes
      *
      * @param oParamName
      * @param week
      * @return
      */
     private String createParamName(String oParamName, int week) {
-        return oParamName + " # " + week;
+        
+        String name = oParamName + " w" + week;
+        
+        // SPSS parameter name must not include whitespace characters
+        name = name.replace(' ', '_');
+                
+        // SPSS parameter name has to begin with a letter or @
+        name = "p"+name;
+        
+        return name;
     }
 
     public String createCSV() {
@@ -82,7 +79,7 @@ public class DBMain {
         char lineDelimiter = '\n';
 
         // caption line
-        sb.append("páciens neve" + inLinedelimiter);
+        sb.append("páciens_neve" + inLinedelimiter);
         for (String s : parameterList) {
             sb.append(s + inLinedelimiter);
         }
